@@ -77,4 +77,6 @@ const alg: Algebra = {
         //Currently an empty array, since it isn't just supposed to be the input deck again
         //Supposed to do shuffle multiple times, then call draw with some sort of hardcoded number, like 5
     })
+
+    //
 };
