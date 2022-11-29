@@ -13,37 +13,106 @@
 //     readonly tile: Card<A>;
 // }
 
-export type Art = {
-    readonly _tag: "art";
-    readonly image: HTMLImageElement;
-    //readonly tile: Card<A>;
-}
-
-export type Description = {
-    readonly _tag: "description";
-    text: string;
-}
-
 // export type Card<A> = | Name<A> | Art<A> | Description<A>;
 
-type Card = {
-    name: string,
-    art: Art,
-    description: Description
+export type EnergyCard = {
+    name: string;
+    art: HTMLImageElement;
 }
 
-export type Deck = {
-    deck: Card[]
+export type PokemonCard = {
+    name: string;
+    stage: number;
+    art: HTMLImageElement;
+    ability: string;
+    attacks: string[];
+    type: string;
+    weakness: string;
+    retreat: number;
 }
+
+export type TrainerCard = {
+    name: string,
+    art: HTMLImageElement,
+    description: string;
+}
+
+export type Card = | EnergyCard | PokemonCard | TrainerCard;
+
+export type NilDeck = {
+    _tag: "NilDeck";
+    //deck: [];
+}
+
+export type SingleDeck = {
+    _tag: "SingleDeck";
+    card: Card;
+}
+
+export type MultiDeck = {
+    _tag: "MultiDeck";
+    deck: Card[];
+}
+
+export type ConcatDeck = {
+    _tag: "ConcatDeck";
+    deckA: Deck;
+    deckB: Deck;
+}
+
+export type DrawDeck = {
+    _tag: "DrawDeck";
+    hand: Deck; //The cards you draw
+    origin: Deck; //The thing you drew them from
+}
+
+export type Deck = | NilDeck | SingleDeck | MultiDeck | ConcatDeck | DrawDeck;
 
 type Algebra = {
+    nilDeck: () => Deck,
+    singleDeck: (card: Card) => Deck,
+    multiDeck: (cards: Card[]) => Deck,
+    concatDeck: (dA: Deck, dB: Deck) => Deck,
+    drawDeck: (hand: Deck, deck: Deck) => Deck
+
+}
+
+const Alg : Algebra = {
+    nilDeck: () => ({ //Doesn't need anything
+        _tag: "NilDeck"
+    }),
+    singleDeck: (card: Card) => ({ //Is only a single card
+        _tag: "SingleDeck",
+        card: card
+    }),
+    multiDeck: (cards: Card[]) => ({ //Is an array of cards
+        _tag: "MultiDeck",
+        deck: cards
+    }),
+    concatDeck: (dA: Deck, dB: Deck) => ({ //Takes in two decks to build off of
+        _tag: "ConcatDeck",
+        deckA: dA,
+        deckB: dB
+    }),
+    drawDeck: (hand: Deck, deck: Deck) => ({ //takes in a hand and a deck to manipulate
+        _tag: "DrawDeck",
+        hand: hand,
+        origin: deck
+    })
+};
+
+export {
+    Alg
+};
+
+/*type Algebra = {
     draw: (input: Deck, amount: number) => Deck,
     search: (input: Deck) => Deck,
     shuffle: (input: Deck) => Deck,
     startGame: (input: Deck) => Deck //combination of shuffle (three times?) and draw, like how ccw is just three cw
-}; //Things you do to a deck
+}; //Things you do to a deck*/
 
-const alg: Algebra = {
+/*const alg: Algebra = {
     draw: (input, amount) => ({
         deck: []
         // deck: input.deck
@@ -79,4 +148,4 @@ const alg: Algebra = {
     })
 
     //
-};
+};*/
