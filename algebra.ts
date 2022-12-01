@@ -60,12 +60,6 @@ export type ConcatDeck = {
     deckB: Deck;
 }
 
-export type DrawDeck = {
-    _tag: "DrawDeck";
-    hand: Deck; //The cards you draw
-    origin: Deck; //The thing you drew them from
-}
-
 export type DrawnDeck = {
     _tag: "DrawnDeck";
     drawn: Number;
