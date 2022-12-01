@@ -66,18 +66,30 @@ export type DrawDeck = {
     origin: Deck; //The thing you drew them from
 }
 
-export type Deck = | NilDeck | SingleDeck | MultiDeck | ConcatDeck | DrawDeck;
+export type DrawnDeck = {
+    _tag: "DrawnDeck";
+    drawn: Number;
+    origin: Deck;
+}
+
+export type MinusDeck = {
+    _tag: "MinusDeck";
+    origin: Deck;
+    subtractor: Deck;
+}
+
+export type Deck = | NilDeck | SingleDeck | MultiDeck | ConcatDeck | DrawnDeck | MinusDeck;
 
 type Algebra = {
     nilDeck: () => Deck,
     singleDeck: (card: Card) => Deck,
     multiDeck: (cards: Card[]) => Deck,
     concatDeck: (dA: Deck, dB: Deck) => Deck,
-    drawDeck: (hand: Deck, deck: Deck) => Deck
-
+    drawnDeck: (drawn: Number, origin: Deck) => Deck,
+    minusDeck: (origin: Deck, subtractor: Deck) => Deck
 }
 
-const Alg : Algebra = {
+const Alg: Algebra = {
     nilDeck: () => ({ //Doesn't need anything
         _tag: "NilDeck"
     }),
@@ -94,11 +106,17 @@ const Alg : Algebra = {
         deckA: dA,
         deckB: dB
     }),
-    drawDeck: (hand: Deck, deck: Deck) => ({ //takes in a hand and a deck to manipulate
-        _tag: "DrawDeck",
-        hand: hand,
-        origin: deck
-    })
+    drawnDeck: (drawnCards: Number, originDeck: Deck) => ({ //Takes in two decks to build off of
+        _tag: "DrawnDeck",
+        drawn: drawnCards,
+        origin: originDeck
+    }),
+    minusDeck: (originDeck: Deck, subtractorDeck: Deck) => ({ 
+        _tag: "MinusDeck",
+        origin: originDeck,
+        subtractor: subtractorDeck
+    }),
+
 };
 
 export {
